@@ -49,5 +49,5 @@ class Lox:
 
 
 if __name__ == '__main__':
-  main()
+  Lox.main()
 
