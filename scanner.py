@@ -67,11 +67,22 @@ class Scanner:
       self.string()
     elif self.is_digit(c):
       self.number()
+    elif c == 'o':
+      if self.match('r'):
+        self.add_token(token_type=TokenType.OR)
+    elif self.is_alpha(c):
+      self.identifier()
     else:
       self.error_callback(self.line, "Unexpected character.")
 
+  
+  def identifier(self) -> None:
+    while self.is_alphanumeric(self.peek()):
+      self.advance()
 
-  def number() -> None:
+    self.add_token(token_type=TokenType.IDENTIFIER)
+
+  def number(self) -> None:
     while self.is_digit(self.peek()):
       self.advance()
 
@@ -101,8 +112,10 @@ class Scanner:
 
   
   def match(self, expected: str) -> bool:
-    if self.is_at_end(): return False
-    if self.source[self.current] != expected: return False
+    if self.is_at_end(): 
+      return False
+    if self.source[self.current] != expected: 
+      return False
     self.current += 1
     return True
 
@@ -117,6 +130,16 @@ class Scanner:
     if self.current + 1 >= len(self.source):
       return '\0'
     return self.source[current + 1]
+
+  
+  def is_alpha(self, c: str) -> bool:
+    return (c >= 'a' and c <= 'z') or \
+           (c >= 'A' and c <= 'Z') or \
+           (c == '_')
+
+  
+  def is_alphanumeric(self, c: str) -> bool:
+    return self.is_alpha(c) or self.is_digit()
 
   
   def is_digit(self, c) -> bool:
