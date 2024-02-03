@@ -1,4 +1,6 @@
 import sys
+from scanner import Scanner
+
 
 class Lox:
   has_error = False
@@ -33,7 +35,7 @@ class Lox:
 
   @staticmethod
   def run(source: str):
-    scanner = Scanner(source)
+    scanner = Scanner(source, Lox.error)
     tokens: list[Token] = scanner.scanTokens()
 
     for token in tokens:

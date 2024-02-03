@@ -1,11 +1,12 @@
 from token import Token
 from token_type import TokenType
-from lox import Lox
+# from lox import Lox
 
 
 class Scanner:
-  def __init__(self, source: string) -> None:
+  def __init__(self, source: str, error_callback: callable) -> None:
     self.source = source
+    self.error_callback = error_callback
     self.tokens: list[Token] = []
     self.start = 0
     self.current = 0
@@ -62,8 +63,41 @@ class Scanner:
       pass
     elif c == '\n':
       self.line += 1
+    elif c == '"':
+      self.string()
+    elif self.is_digit(c):
+      self.number()
     else:
-      Lox.error(self.line, "Unexpected character.")
+      self.error_callback(self.line, "Unexpected character.")
+
+
+  def number() -> None:
+    while self.is_digit(self.peek()):
+      self.advance()
+
+    # Look for a fractional part
+    if self.peek() == '.' and self.is_digit(self.peek_next()):
+      self.advance() # Consume the "."
+
+      while self.is_digit(self.peek()):
+        self.advance()
+
+    self.add_token(token_type=TokenType.NUMBER, literal=float(source[start:current]))
+
+
+  def string(self) -> None:
+    while self.peek() != '"' and not self.is_at_end():
+      if self.peek() == '\n': self.line += 1
+      self.advance()
+    
+    if self.is_at_end():
+      self.error_callback(self.line, "Unterminated string.")
+      return
+
+    self.advance() # Closing ".
+
+    value: str = self.source[self.start + 1: self.current - 1]
+    self.add_token(token_type=TokenType.STRING, literal=value)
 
   
   def match(self, expected: str) -> bool:
@@ -76,10 +110,20 @@ class Scanner:
   def peek(self) -> str:
     if self.is_at_end():
       return '\0'
-    return self.source[self.current] 
+    return self.source[self.current]
+
+  
+  def peek_next(self) -> str:
+    if self.current + 1 >= len(self.source):
+      return '\0'
+    return self.source[current + 1]
+
+  
+  def is_digit(self, c) -> bool:
+    return c >= '0' and c <= '9'
   
   
-  def is_at_end(self) -> boolean:
+  def is_at_end(self) -> bool:
     return self.current >= len(self.source)
 
 
