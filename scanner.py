@@ -1,4 +1,5 @@
 from token import Token
+from token_type import TokenType
 from lox import Lox
 
 
@@ -22,6 +23,7 @@ class Scanner:
   
   def scan_token(self) -> None:
     c = self.advance()
+
     if c == '(':
       self.add_token(TokenType.LEFT_PAREN)
     elif c == ')':
