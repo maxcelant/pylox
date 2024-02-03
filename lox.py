@@ -39,11 +39,13 @@ class Lox:
     for token in tokens:
       print(token)
 
+  
   @staticmethod
   def error(line: int, message: str):
     Lox.report(line, "", message)
 
-
+  
+  @staticmethod
   def report(line: int, where: str, message: str):
     print(f'[line {line} ] Error{where}: {message}')
 

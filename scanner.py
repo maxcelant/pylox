@@ -10,8 +10,6 @@ class Scanner:
     self.current = 0
     self.line = 1
 
-  def is_at_end(self) -> boolean:
-    return self.current >= len(self.source)
 
   def scan_tokens(self) -> list[Token]:
     while not self.is_at_end():
@@ -21,6 +19,7 @@ class Scanner:
     self.tokens.append(Token(token_type=TokenType.EOF, lexeme="", literal=None, line=self.line))
     return tokens
 
+  
   def scan_token(self) -> None:
     c = self.advance()
     if c == '(':
@@ -43,16 +42,52 @@ class Scanner:
       self.add_token(TokenType.SEMICOLON)
     elif c == "*":
       self.add_token(TokenType.STAR)
+    elif '!':
+      self.add_token(TokenType.BANG_EQUAL if self.match('=') else TokenType.BANG)
+    elif '=':
+      self.add_token(TokenType.EQUAL_EQUAL if self.match('=') else TokenType.EQUAL)
+    elif '<':
+      self.add_token(TokenType.LESS_EQUAL if self.match('=') else TokenType.LESS)
+    elif '>':
+      self.add_token(TokenType.GREATER_EQUAL if self.match('=') else TokenType.GREATER)
+    elif '/':
+      if self.match('/'):
+        while self.peek() != '\n' and not self.is_at_end():
+          self.advance()
+      else:
+        add_token(TokenType.SLASH)
     else:
       Lox.error(self.line, "Unexpected character.")
 
-  def advance(self) -> str:
+  
+  def match(self, expected: str) -> bool:
+    if self.is_at_end(): return False
+    if self.source[self.current] != expected: return False
     self.current += 1
-    return self.source[self.current]
+    return True
+  
+  def peek(self) -> str:
+    if self.is_at_end():
+      return '\0'
+    return self.source[self.current] 
+  
+  
+  def is_at_end(self) -> boolean:
+    return self.current >= len(self.source)
+
+
+  def advance(self) -> str:
+    c = self.source[self.current]
+    self.current += 1
+    return c
+
 
   def add_token(self, token_type: TokenType) -> None:
     self.add_token(token_type, None)
 
+
   def add_token(self, token_type: TokenType, literal: object) -> None:
     text = self.source[self.start:self.current]
     self.tokens.append(Token(token_type=token_type, lexeme=text, literal=literal, line=self.line))
+  
+  
