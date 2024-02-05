@@ -1,16 +1,21 @@
+from typing import Callable
+
 from token import Token
 from token_type import TokenType
-# from lox import Lox
 
 
 class Scanner:
-  def __init__(self, source: str, error_callback: callable) -> None:
+  def __init__(self, source: str, error_callback: Callable[[int, str], None]) -> None:
     self.source = source
     self.error_callback = error_callback
     self.tokens: list[Token] = []
     self.start = 0
     self.current = 0
     self.line = 1
+    self.keywords = {
+      "and": TokenType.AND,
+      # Continue here
+    }
 
 
   def scan_tokens(self) -> list[Token]:
@@ -142,7 +147,7 @@ class Scanner:
     return self.is_alpha(c) or self.is_digit()
 
   
-  def is_digit(self, c) -> bool:
+  def is_digit(self, c :str) -> bool:
     return c >= '0' and c <= '9'
   
   
