@@ -1,6 +1,6 @@
 import sys
 from scanner import Scanner
-
+from token import Token
 
 class Lox:
   has_error = False
@@ -30,7 +30,7 @@ class Lox:
 
     Lox.run(contents)
 
-    if Lox.had_error: return
+    if Lox.has_error: return
 
 
   @staticmethod

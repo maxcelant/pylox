@@ -24,7 +24,7 @@ class Scanner:
       self.scan_token()
 
     self.tokens.append(Token(token_type=TokenType.EOF, lexeme="", literal=None, line=self.line))
-    return tokens
+    return self.tokens
 
   
   def scan_token(self) -> None:
@@ -63,7 +63,7 @@ class Scanner:
         while self.peek() != '\n' and not self.is_at_end():
           self.advance()
       else:
-        add_token(TokenType.SLASH)
+        self.add_token(TokenType.SLASH)
     elif c == ' ' or c == '\r' or c == '\t':
       pass
     elif c == '\n':
@@ -98,7 +98,7 @@ class Scanner:
       while self.is_digit(self.peek()):
         self.advance()
 
-    self.add_token(token_type=TokenType.NUMBER, literal=float(source[start:current]))
+    self.add_token(token_type=TokenType.NUMBER, literal=float(self.source[self.start:self.current]))
 
 
   def string(self) -> None:
@@ -134,7 +134,7 @@ class Scanner:
   def peek_next(self) -> str:
     if self.current + 1 >= len(self.source):
       return '\0'
-    return self.source[current + 1]
+    return self.source[self.current + 1]
 
   
   def is_alpha(self, c: str) -> bool:
