@@ -1,6 +1,6 @@
 from typing import Callable
 
-from token import Token
+from token_item import TokenItem
 from token_type import TokenType
 
 
@@ -8,22 +8,36 @@ class Scanner:
   def __init__(self, source: str, error_callback: Callable[[int, str], None]) -> None:
     self.source = source
     self.error_callback = error_callback
-    self.tokens: list[Token] = []
+    self.tokens: list[TokenItem] = []
     self.start = 0
     self.current = 0
     self.line = 1
     self.keywords = {
-      "and": TokenType.AND,
-      # Continue here
+      "and":    TokenType.AND,
+      "class":  TokenType.CLASS,
+      "else":   TokenType.ELSE,
+      "false":  TokenType.FALSE,
+      "for":    TokenType.FOR,
+      "fun":    TokenType.FUN,
+      "if":     TokenType.IF,
+      "nil":    TokenType.NIL,
+      "or":     TokenType.OR,
+      "print":  TokenType.PRINT,
+      "return": TokenType.RETURN,
+      "super":  TokenType.SUPER,
+      "this":   TokenType.THIS,
+      "true":   TokenType.TRUE,
+      "var":    TokenType.VAR,
+      "while":  TokenType.WHILE
     }
 
 
-  def scan_tokens(self) -> list[Token]:
+  def scan_tokens(self) -> list[TokenItem]:
     while not self.is_at_end():
       self.start = self.current
       self.scan_token()
 
-    self.tokens.append(Token(token_type=TokenType.EOF, lexeme="", literal=None, line=self.line))
+    self.tokens.append(TokenItem(token_type=TokenType.EOF, lexeme="", literal=None, line=self.line))
     return self.tokens
 
   
@@ -85,8 +99,11 @@ class Scanner:
     while self.is_alphanumeric(self.peek()):
       self.advance()
 
-    self.add_token(token_type=TokenType.IDENTIFIER)
+    text = self.source[self.start: self.current]
+    token_type = self.keywords.get(text, TokenType.IDENTIFIER)
+    self.add_token(token_type=token_type)
 
+  
   def number(self) -> None:
     while self.is_digit(self.peek()):
       self.advance()
@@ -167,6 +184,6 @@ class Scanner:
 
   def add_token(self, token_type: TokenType, literal: object) -> None:
     text = self.source[self.start:self.current]
-    self.tokens.append(Token(token_type=token_type, lexeme=text, literal=literal, line=self.line))
+    self.tokens.append(TokenItem(token_type=token_type, lexeme=text, literal=literal, line=self.line))
   
   

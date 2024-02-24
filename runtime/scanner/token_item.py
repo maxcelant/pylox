@@ -1,6 +1,6 @@
 from token_type import TokenType
 
-class Token:
+class TokenItem:
   def __init__(self, token_type: TokenType, lexeme: str, literal: object, line: int):
     self.token_type = token_type
     self.lexem = lexeme

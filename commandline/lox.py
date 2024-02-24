@@ -1,12 +1,12 @@
 import sys
-from scanner import Scanner
-from token import Token
+from runtime.scanner.scanner import Scanner
+from runtime.scanner.token_item import TokenItem
 
 class Lox:
   has_error = False
   
   @staticmethod
-  def main() -> None:
+  def init() -> None:
     if len(sys.argv) > 1:
       print('Usage pylox [script]')
     elif len(sys.argv) == 1:
@@ -23,6 +23,7 @@ class Lox:
       Lox.run(line)
       Lox.had_error = False
 
+
   @staticmethod
   def run_file(path: str) -> None:
     with open(path, 'r', encoding='utf-8') as file:
@@ -36,7 +37,7 @@ class Lox:
   @staticmethod
   def run(source: str) -> None:
     scanner = Scanner(source, Lox.error)
-    tokens: list[Token] = scanner.scanTokens()
+    tokens: list[TokenItem] = scanner.scanTokens()
 
     for token in tokens:
       print(token)
@@ -50,8 +51,4 @@ class Lox:
   @staticmethod
   def report(line: int, where: str, message: str) -> None:
     print(f'[line {line} ] Error{where}: {message}')
-
-
-if __name__ == '__main__':
-  Lox.main()
 
