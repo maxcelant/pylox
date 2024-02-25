@@ -1,7 +1,7 @@
 from typing import Callable
 
-from token_item import TokenItem
-from token_type import TokenType
+from runtime.scanner.token_item import TokenItem
+from runtime.scanner.token_type import TokenType
 
 
 class Scanner:
@@ -161,7 +161,7 @@ class Scanner:
 
   
   def is_alphanumeric(self, c: str) -> bool:
-    return self.is_alpha(c) or self.is_digit()
+    return self.is_alpha(c) or self.is_digit(c)
 
   
   def is_digit(self, c :str) -> bool:
@@ -176,13 +176,9 @@ class Scanner:
     c = self.source[self.current]
     self.current += 1
     return c
+  
 
-
-  def add_token(self, token_type: TokenType) -> None:
-    self.add_token(token_type, None)
-
-
-  def add_token(self, token_type: TokenType, literal: object) -> None:
+  def add_token(self, token_type: TokenType, literal: object = None) -> None:
     text = self.source[self.start:self.current]
     self.tokens.append(TokenItem(token_type=token_type, lexeme=text, literal=literal, line=self.line))
   

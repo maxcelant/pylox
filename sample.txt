@@ -1,0 +1,6 @@
+var i = 0
+var j = 2
+
+while (i < j)
+  i++
+  j++

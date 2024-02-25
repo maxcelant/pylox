@@ -7,10 +7,10 @@ class Lox:
   
   @staticmethod
   def init() -> None:
-    if len(sys.argv) > 1:
+    if len(sys.argv) > 2:
       print('Usage pylox [script]')
-    elif len(sys.argv) == 1:
-      Lox.run_file(sys.argv[0])
+    elif len(sys.argv) == 2:
+      Lox.run_file(sys.argv[1])
     else:
       Lox.run_prompt()
 
@@ -37,7 +37,7 @@ class Lox:
   @staticmethod
   def run(source: str) -> None:
     scanner = Scanner(source, Lox.error)
-    tokens: list[TokenItem] = scanner.scanTokens()
+    tokens: list[TokenItem] = scanner.scan_tokens()
 
     for token in tokens:
       print(token)
