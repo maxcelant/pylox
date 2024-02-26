@@ -1,6 +1,6 @@
 import sys
-from runtime.scanner.scanner import Scanner
-from runtime.scanner.token_item import TokenItem
+from pylox.scanner.scanner import Scanner
+from pylox.scanner.token_item import TokenItem
 
 class Lox:
   has_error = False

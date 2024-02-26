@@ -1,4 +1,4 @@
-from runtime.scanner.token_type import TokenType
+from pylox.scanner.token_type import TokenType
 
 class TokenItem:
   def __init__(self, token_type: TokenType, lexeme: str, literal: object, line: int):

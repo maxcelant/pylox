@@ -1,7 +1,7 @@
 from typing import Callable
 
-from runtime.scanner.token_item import TokenItem
-from runtime.scanner.token_type import TokenType
+from pylox.scanner.token_item import TokenItem
+from pylox.scanner.token_type import TokenType
 
 
 class Scanner:
