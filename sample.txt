@@ -1,1 +1,4 @@
 var name = "Max"
+while (i < 0) {
+  i++
+}
