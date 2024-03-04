@@ -1,28 +1,63 @@
-from pylox.scanner.token_type import TokenType
+from __future__ import annotations
+from abc import ABC, abstractmethod
+
+from pylox.scanner.token_item import TokenItem
 
 
-class Expr:
-  pass
+class Visitor(ABC):
+  @abstractmethod
+  def visit_binary(self, binary: Expr.Binary):
+    pass
+
+  @abstractmethod
+  def visit_grouping(self, grouping: Expr.Grouping):
+    pass
+
+  @abstractmethod
+  def visit_literal(self, literal: Expr.Literal):
+    pass
+
+  @abstractmethod
+  def visit_unary(self, unary: Expr.Unary):
+    pass
 
 
-class Binary(Expr):
-  def __init__(self, left: Expr, operator: TokenType, right: Expr):
-    self.left = left
-    self.operator = operator
-    self.right = right
+class Expr(ABC):
+  @abstractmethod
+  def accept(self, visitor: Visitor):
+    pass
 
 
-class Grouping(Expr):
-  def __init__(self, expression: Expr):
-    self.expression = expression
+  class Binary:
+    def __init__(self, left: Expr, operator: TokenItem, right: Expr):
+      self.left = left
+      self.operator = operator
+      self.right = right
+
+    def accept(self, visitor: Visitor):
+      return visitor.visit_binary(self)
 
 
-class Literal(Expr):
-  def __init__(self, value: object):
-    self.value = value
+  class Grouping:
+    def __init__(self, expression: Expr):
+      self.expression = expression
+
+    def accept(self, visitor: Visitor):
+      return visitor.visit_grouping(self)
 
 
-class Unary(Expr):
-  def __init__(self, operator: TokenType, right: Expr):
-    self.operator = operator
-    self.right = right
+  class Literal:
+    def __init__(self, value: object):
+      self.value = value
+
+    def accept(self, visitor: Visitor):
+      return visitor.visit_literal(self)
+
+
+  class Unary:
+    def __init__(self, operator: TokenItem, right: Expr):
+      self.operator = operator
+      self.right = right
+
+    def accept(self, visitor: Visitor):
+      return visitor.visit_unary(self)
