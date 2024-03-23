@@ -6,8 +6,7 @@ from pylox.scanner.token_type import TokenType
 
 def main():
   expression = Expr.Binary(
-    Expr.Unary(TokenItem(TokenType.MINUS, "-", None, 1),
-               Expr.Literal(123)),
+    Expr.Unary(TokenItem(TokenType.MINUS, "-", None, 1), Expr.Literal(123)),
     TokenItem(TokenType.STAR, "*", None, 1),
     Expr.Grouping(Expr.Literal(45.67))
   )

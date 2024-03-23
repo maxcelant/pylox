@@ -1,9 +1,4 @@
-
 from pylox.parser.productions import Expr, Visitor
-from pylox.scanner.token_item import TokenItem
-from pylox.scanner.token_type import TokenType
-
-
 
 
 class AstPrinter(Visitor):
