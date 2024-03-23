@@ -1,6 +1,7 @@
 import sys
 from pylox.scanner.scanner import Scanner
 from pylox.scanner.token_item import TokenItem
+from pylox.scanner.token_type import TokenType
 
 class Lox:
   has_error = False
@@ -37,18 +38,26 @@ class Lox:
 
   @staticmethod
   def run(source: str) -> None:
-    scanner = Scanner(source, Lox.error)
+    scanner = Scanner(source, Lox.scanner_error)
     tokens: list[TokenItem] = scanner.scan_tokens()
 
     for token in tokens:
       print(token)
 
-  
-  @staticmethod
-  def error(line: int, message: str) -> None:
-    Lox.report(line, "", message)
+    # parser = Parser(tokens, Lox.parse_error)
 
   
+  @staticmethod
+  def scanner_error(line: int, message: str) -> None:
+    Lox.report(line, "", message)
+
+  @staticmethod
+  def parse_error(token: TokenItem, message: str) -> None:
+    if token.token_type == TokenType.EOF:
+      Lox.report(token.line, " at end", message)
+    else:
+      Lox.report(token.line, " at '" + token.lexeme + "'", message)
+
   @staticmethod
   def report(line: int, where: str, message: str) -> None:
     print(f'[line {line} ] Error{where}: {message}')
