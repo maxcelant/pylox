@@ -31,7 +31,8 @@ class Lox:
 
     Lox.run(contents)
 
-    if Lox.has_error: return
+    if Lox.has_error: 
+      return
 
 
   @staticmethod
