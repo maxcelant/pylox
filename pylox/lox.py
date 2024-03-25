@@ -43,13 +43,12 @@ class Lox:
     scanner = Scanner(source, Lox.scanner_error)
     tokens: list[TokenItem] = scanner.scan_tokens()
 
-    for token in tokens:
-      print(token)
-
     parser = Parser(tokens, Lox.parse_error)
     expression = parser.parse()
+    
     if Lox.had_error:
       return
+    
     print(AstPrinter().print(expression))
 
   
