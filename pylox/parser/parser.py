@@ -14,6 +14,12 @@ class Parser:
     self.error_callback = error_callback
     self.current = 0
 
+  def parse(self) -> Expr:
+    try:
+      return self.expression()
+    except Parser.ParseError:
+      return None
+
   def match(self, *types: TokenType) -> bool:
     for t in types:
       if self.check(t):
@@ -112,4 +118,26 @@ class Parser:
       expr: Expr = self.expression()
       self.consume(TokenType.RIGHT_PAREN, "Expect ')' after expression")
       return Expr.Grouping(expr)
+    
+    raise self.error_callback(self.peek(), "Expect expression.")
 
+  def synchronize(self) -> None:
+    self.advance()
+
+    while not self.is_at_end():
+      if self.previous().token_type == TokenType.SEMICOLON:
+        return
+
+      if self.peek().token_type in {
+        TokenType.CLASS,
+        TokenType.FUN,
+        TokenType.VAR,
+        TokenType.FOR,
+        TokenType.IF,
+        TokenType.WHILE,
+        TokenType.PRINT,
+        TokenType.RETURN,
+      }:
+        return
+      
+      self.advance()

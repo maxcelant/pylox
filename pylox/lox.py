@@ -1,10 +1,12 @@
 import sys
+from pylox.parser.ast_printer import AstPrinter
+from pylox.parser.parser import Parser
 from pylox.scanner.scanner import Scanner
 from pylox.scanner.token_item import TokenItem
 from pylox.scanner.token_type import TokenType
 
 class Lox:
-  has_error = False
+  had_error = False
   
   @staticmethod
   def init() -> None:
@@ -32,7 +34,7 @@ class Lox:
 
     Lox.run(contents)
 
-    if Lox.has_error: 
+    if Lox.had_error: 
       return
 
 
@@ -44,7 +46,11 @@ class Lox:
     for token in tokens:
       print(token)
 
-    # parser = Parser(tokens, Lox.parse_error)
+    parser = Parser(tokens, Lox.parse_error)
+    expression = parser.parse()
+    if Lox.had_error:
+      return
+    print(AstPrinter().print(expression))
 
   
   @staticmethod
