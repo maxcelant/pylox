@@ -1,4 +1,5 @@
 
+from typing import Callable
 from pylox.parser.productions import Expr
 from pylox.scanner.token_item import TokenItem
 from pylox.scanner.token_type import TokenType
@@ -9,8 +10,8 @@ class Parser:
   class ParseError(Exception):
     pass
 
-  def __init__(self, tokens: list[TokenItem], error_callback):
-    self.tokens  = tokens
+  def __init__(self, tokens: list[TokenItem], error_callback: Callable[[int, str], None]):
+    self.tokens = tokens
     self.error_callback = error_callback
     self.current = 0
 

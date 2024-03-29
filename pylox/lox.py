@@ -42,6 +42,8 @@ class Lox:
   def run(source: str) -> None:
     scanner = Scanner(source, Lox.scanner_error)
     tokens: list[TokenItem] = scanner.scan_tokens()
+    
+    for t in tokens: print(t.token_type, end=', ')
 
     parser = Parser(tokens, Lox.parse_error)
     expression = parser.parse()

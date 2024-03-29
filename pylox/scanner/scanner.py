@@ -5,7 +5,7 @@ from pylox.scanner.token_type import TokenType
 
 
 class Scanner:
-  def __init__(self, source: str, error_callback: Callable[[int, str], None]) -> None:
+  def __init__(self, source: str, error_callback: Callable[[TokenItem, str], None]) -> None:
     self.source = source
     self.error_callback = error_callback
     self.tokens: list[TokenItem] = []
