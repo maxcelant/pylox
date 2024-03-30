@@ -1,6 +1,6 @@
 
 from typing import Callable
-from pylox.parser.productions import Expr
+from pylox.parser.expr import Expr
 from pylox.scanner.token_item import TokenItem
 from pylox.scanner.token_type import TokenType
 

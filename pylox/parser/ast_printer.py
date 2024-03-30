@@ -1,4 +1,4 @@
-from pylox.parser.productions import Expr, Visitor
+from pylox.parser.expr import Expr, Visitor
 
 
 class AstPrinter(Visitor):

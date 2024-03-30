@@ -1,6 +1,6 @@
 
 from typing import Callable
-from pylox.parser.productions import Expr, Visitor
+from pylox.parser.expr import Expr, Visitor
 from pylox.scanner.token_type import TokenType
 from pylox.interpreter.runtime_exception import RuntimeException
 
