@@ -11,12 +11,14 @@ class Interpreter(Expr.Visitor, Stmt.Visitor):
   def __init__(self, error_callback: Callable[[RuntimeException], None]):
     self.error_callback = error_callback
 
+
   def interpret(self, expression: Expr):
     try:
       value: object = self.evaluate(expression)
       print(self.stringify(value))
     except RuntimeException as e:
       self.error_callback(e)
+
 
   def stringify(self, obj: object):
     if obj == None: return "nil"
@@ -29,42 +31,51 @@ class Interpreter(Expr.Visitor, Stmt.Visitor):
     
     return str(obj)
 
+
   def evaluate(self, expr: Expr):
     return expr.accept(self)
+
 
   def is_truthy(self, obj: object) -> bool:
     if obj == None: return False
     if isinstance(obj, bool): return bool(obj)
     return True
-  
+
+
   def is_equal(self, a: object, b: object) -> bool:
     if a == None and b == None: return True
     if a == None: return False
-
     return a == b
-  
+
+
   def check_number_operand(self, operator: TokenType, operand: object):
     if isinstance(operand, float): return
     raise RuntimeException(operator, "Operand must be a number.")
-  
+
+
   def check_number_operands(self, operator: TokenType, left: object, right: object):
     if isinstance(left, float) and isinstance(right, float): 
       return
     raise RuntimeException(operator, "Operand must be a number.")
-  
+
+
   def visit_expression_stmt(self, stmt: Stmt.Expression) -> None:
     self.evaluate(stmt.expression)
+
 
   def visit_print_stmt(self, stmt: Stmt.Print) -> None:
     value: object = self.evaluate(stmt.expression)
     print(self.stringify(value))
-  
+
+
   def visit_literal(self, expr: Expr.Literal):
     return expr.value
-  
+
+
   def visit_grouping(self, expr: Expr.Grouping):
     return self.evaluate(expr.expression)
-  
+
+
   def visit_unary(self, expr: Expr.Unary):
     right: object = self.evaluate(expr.right)
 
@@ -74,7 +85,8 @@ class Interpreter(Expr.Visitor, Stmt.Visitor):
     
     if expr.operator.token_type == TokenType.BANG:
       return not self.is_truthy(right)
-  
+
+
   def visit_binary(self, expr: Expr.Binary):
     right: object = self.evaluate(expr.right)
     left: object = self.evaluate(expr.left)
