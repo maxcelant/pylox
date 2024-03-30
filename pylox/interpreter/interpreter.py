@@ -12,14 +12,14 @@ class Interpreter(Expr.Visitor, Stmt.Visitor):
     self.error_callback = error_callback
 
 
-  def interpret(self, expression: Expr):
+  def interpret(self, statements: list[Stmt]):
     try:
-      value: object = self.evaluate(expression)
-      print(self.stringify(value))
+      for s in statements:
+        self.execute(s)
     except RuntimeException as e:
       self.error_callback(e)
 
-
+  
   def stringify(self, obj: object):
     if obj == None: return "nil"
 
@@ -34,6 +34,10 @@ class Interpreter(Expr.Visitor, Stmt.Visitor):
 
   def evaluate(self, expr: Expr):
     return expr.accept(self)
+
+
+  def execute(self, stmt: Stmt):
+    stmt.accept(self)
 
 
   def is_truthy(self, obj: object) -> bool:

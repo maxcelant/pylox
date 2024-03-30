@@ -2,6 +2,7 @@ import sys
 from pylox.interpreter.interpreter import Interpreter
 from pylox.parser.ast_printer import AstPrinter
 from pylox.parser.parser import Parser
+from pylox.parser.stmt import Stmt
 from pylox.scanner.scanner import Scanner
 from pylox.scanner.token_item import TokenItem
 from pylox.scanner.token_type import TokenType
@@ -49,17 +50,12 @@ class Lox:
   def run(source: str) -> None:
     scanner = Scanner(source, Lox.scanner_error)
     tokens: list[TokenItem] = scanner.scan_tokens()
-
     parser = Parser(tokens, Lox.parse_error)
+    statements: list[Stmt] = parser.parse()
 
-    expression = parser.parse()
+    if Lox.had_error: return
 
-    print(AstPrinter().print(expression))
-
-    if Lox.had_error:
-      return
-
-    Lox.interpreter.interpret(expression)
+    Lox.interpreter.interpret(statements)
   
   @staticmethod
   def scanner_error(line: int, message: str) -> None:
