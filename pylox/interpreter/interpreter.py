@@ -46,8 +46,6 @@ class Interpreter(Visitor):
     raise RuntimeException(operator, "Operand must be a number.")
   
   def check_number_operands(self, operator: TokenType, left: object, right: object):
-    print(f'{left}')
-    print(f'{right}')
     if isinstance(left, float) and isinstance(right, float): 
       return
     raise RuntimeException(operator, "Operand must be a number.")

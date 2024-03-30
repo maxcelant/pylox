@@ -54,9 +54,11 @@ class Lox:
 
     expression = parser.parse()
 
+    print(AstPrinter().print(expression))
+
     if Lox.had_error:
       return
-    
+
     Lox.interpreter.interpret(expression)
   
   @staticmethod
@@ -71,8 +73,9 @@ class Lox:
       Lox.report(token.line, " at '" + token.lexeme + "'", message)
 
   @staticmethod
-  def runtime_error(error: RuntimeException):
-    print(f'{error.message}\n[line {error.token.line}]')
+  def runtime_error(error: RuntimeException) -> None:
+    print(f'Error: {error}')
+    # print(f'{error.message}\n[line {error.token.line}]') # todo: fix this
     Lox.had_runtime_error = True
 
   @staticmethod
