@@ -1,4 +1,5 @@
 
+from typing import Callable
 from pylox.parser.productions import Expr, Visitor
 from pylox.scanner.token_type import TokenType
 from pylox.interpreter.runtime_exception import RuntimeException
@@ -6,7 +7,7 @@ from pylox.interpreter.runtime_exception import RuntimeException
 
 class Interpreter(Visitor):
 
-  def __init__(self, error_callback):
+  def __init__(self, error_callback: Callable[[RuntimeException], None]):
     self.error_callback = error_callback
 
   def interpret(self, expression: Expr):
