@@ -4,28 +4,28 @@ from abc import ABC, abstractmethod
 from pylox.scanner.token_item import TokenItem
 
 
-class Visitor(ABC):
-  @abstractmethod
-  def visit_binary(self, binary: Expr.Binary):
-    pass
-
-  @abstractmethod
-  def visit_grouping(self, grouping: Expr.Grouping):
-    pass
-
-  @abstractmethod
-  def visit_literal(self, literal: Expr.Literal):
-    pass
-
-  @abstractmethod
-  def visit_unary(self, unary: Expr.Unary):
-    pass
-
-
 class Expr(ABC):
+
   @abstractmethod
-  def accept(self, visitor: Visitor):
+  def accept(self, visitor: Expr.Visitor):
     pass
+
+  class Visitor(ABC):
+    @abstractmethod
+    def visit_binary(self, binary: Expr.Binary):
+      pass
+
+    @abstractmethod
+    def visit_grouping(self, grouping: Expr.Grouping):
+      pass
+
+    @abstractmethod
+    def visit_literal(self, literal: Expr.Literal):
+      pass
+
+    @abstractmethod
+    def visit_unary(self, unary: Expr.Unary):
+      pass
 
 
   class Binary:
@@ -34,7 +34,7 @@ class Expr(ABC):
       self.operator = operator
       self.right = right
 
-    def accept(self, visitor: Visitor):
+    def accept(self, visitor: Expr.Visitor):
       return visitor.visit_binary(self)
 
 
@@ -42,7 +42,7 @@ class Expr(ABC):
     def __init__(self, expression: Expr):
       self.expression = expression
 
-    def accept(self, visitor: Visitor):
+    def accept(self, visitor: Expr.Visitor):
       return visitor.visit_grouping(self)
 
 
@@ -50,7 +50,7 @@ class Expr(ABC):
     def __init__(self, value: object):
       self.value = value
 
-    def accept(self, visitor: Visitor):
+    def accept(self, visitor: Expr.Visitor):
       return visitor.visit_literal(self)
 
 
@@ -59,5 +59,5 @@ class Expr(ABC):
       self.operator = operator
       self.right = right
 
-    def accept(self, visitor: Visitor):
+    def accept(self, visitor: Expr.Visitor):
       return visitor.visit_unary(self)

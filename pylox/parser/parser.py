@@ -1,6 +1,7 @@
 
 from typing import Callable
 from pylox.parser.expr import Expr
+from pylox.parser.stmt import Stmt
 from pylox.scanner.token_item import TokenItem
 from pylox.scanner.token_type import TokenType
 
@@ -15,12 +16,13 @@ class Parser:
     self.error_callback = error_callback
     self.current = 0
 
-  def parse(self) -> Expr:
-    try:
-      return self.expression()
-    except Parser.ParseError:
-      return None
-
+  def parse(self) -> list[Stmt]:
+    statements: list[Stmt] = []
+    while not self.is_at_end():
+      statements.append(self.statement())
+    
+    return statements
+  
   def match(self, *types: TokenType) -> bool:
     for t in types:
       if self.check(t):
@@ -58,6 +60,22 @@ class Parser:
   
   def expression(self) -> Expr:
     return self.equality()
+  
+  def statement(self) -> Stmt:
+    if self.match(TokenType.PRINT):
+      return self.print_statement()
+    
+    return self.expression_statement()
+  
+  def print_statement(self) -> Stmt:
+    value: Expr = self.expression()
+    self.consume(TokenType.SEMICOLON, "Expect ';' after value.")
+    return Stmt.Print(value)
+  
+  def expression_statement(self) -> Stmt:
+    expr: Expr = self.expression()
+    self.consume(TokenType.SEMICOLON, "Expect ';' after value.")
+    return Stmt.Expression(expr)
   
   def equality(self) -> Expr:
     expr: Expr = self.comparison()

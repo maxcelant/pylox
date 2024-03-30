@@ -1,7 +1,7 @@
-from pylox.parser.expr import Expr, Visitor
+from pylox.parser.expr import Expr
 
 
-class AstPrinter(Visitor):
+class AstPrinter(Expr.Visitor):
   def print(self, expr: Expr):
     return expr.accept(self)
   

@@ -1,11 +1,12 @@
 
 from typing import Callable
-from pylox.parser.expr import Expr, Visitor
+from pylox.parser.expr import Expr
+from pylox.parser.stmt import Stmt
 from pylox.scanner.token_type import TokenType
 from pylox.interpreter.runtime_exception import RuntimeException
 
 
-class Interpreter(Visitor):
+class Interpreter(Expr.Visitor, Stmt.Visitor):
 
   def __init__(self, error_callback: Callable[[RuntimeException], None]):
     self.error_callback = error_callback
@@ -50,7 +51,14 @@ class Interpreter(Visitor):
     if isinstance(left, float) and isinstance(right, float): 
       return
     raise RuntimeException(operator, "Operand must be a number.")
+  
+  def visit_expression_stmt(self, stmt: Stmt.Expression) -> None:
+    self.evaluate(stmt.expression)
 
+  def visit_print_stmt(self, stmt: Stmt.Print) -> None:
+    value: object = self.evaluate(stmt.expression)
+    print(self.stringify(value))
+  
   def visit_literal(self, expr: Expr.Literal):
     return expr.value
   
