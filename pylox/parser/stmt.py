@@ -1,6 +1,7 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
 from pylox.parser.expr import Expr
+from pylox.scanner.token_item import TokenItem
 
 
 class Stmt(ABC):
@@ -37,3 +38,10 @@ class Stmt(ABC):
 
     def accept(self, visitor: Stmt.Visitor):
       visitor.visit_print_stmt(self)
+
+  class Var:
+    def __init__(self, name: TokenItem, initializer: Expr):
+      self.name = name
+      self.initializer = initializer
+
+    

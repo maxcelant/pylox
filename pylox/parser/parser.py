@@ -20,7 +20,7 @@ class Parser:
   def parse(self) -> list[Stmt]:
     statements: list[Stmt] = []
     while not self.is_at_end():
-      statements.append(self.statement())
+      statements.append(self.declaration())
     return statements
 
 
@@ -88,6 +88,16 @@ class Parser:
   def expression(self) -> Expr:
     return self.equality()
   
+
+  def declaration(self) -> Stmt:
+    try:
+      if self.match(TokenType.VAR):
+        return self.var_declaration()
+      return self.statement()
+    except Parser.ParseError:
+      self.synchronize()
+      return None
+
   
   def equality(self) -> Expr:
     expr: Expr = self.comparison()
