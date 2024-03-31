@@ -17,6 +17,7 @@ class Interpreter(Expr.Visitor, Stmt.Visitor):
   def interpret(self, statements: list[Stmt]):
     try:
       for s in statements:
+        print(s)
         self.execute(s)
     except RuntimeException as e:
       self.error_callback(e)
@@ -102,6 +103,7 @@ class Interpreter(Expr.Visitor, Stmt.Visitor):
   
   def visit_variable_expr(self, expr: Expr.Variable):
     return self.environment.get(expr.name)
+  
 
   def visit_binary_expr(self, expr: Expr.Binary):
     right: object = self.evaluate(expr.right)

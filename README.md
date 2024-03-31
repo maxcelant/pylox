@@ -6,9 +6,12 @@
 > python3 main.py [file].lox
 ```
 
-Right now this only supports number calculations and string concatenation
+Supports calculations and declarations
 
-```js
-21 * (12 + (9 / 3))
-"foo" + "bar"
+```ruby
+var x = 21 * (12 + (9 / 3))
+var y = "foo" + "bar"
+
+print x
+print y
 ```

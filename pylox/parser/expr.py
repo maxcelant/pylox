@@ -39,6 +39,9 @@ class Expr(ABC):
 
     def accept(self, visitor: Expr.Visitor):
       return visitor.visit_binary_expr(self)
+    
+    def __repr__(self):
+      return f'Binary({self.left=}, {self.operator=}, {self.right})'
 
 
   class Grouping:
@@ -48,6 +51,9 @@ class Expr(ABC):
     def accept(self, visitor: Expr.Visitor):
       return visitor.visit_grouping_expr(self)
 
+    def __repr__(self):
+      return f'Grouping({self.expression=})'
+
 
   class Literal:
     def __init__(self, value: object):
@@ -55,6 +61,9 @@ class Expr(ABC):
 
     def accept(self, visitor: Expr.Visitor):
       return visitor.visit_literal_expr(self)
+
+    def __repr__(self):
+      return f'Literal({self.value=})'
 
 
   class Unary:
@@ -65,6 +74,9 @@ class Expr(ABC):
     def accept(self, visitor: Expr.Visitor):
       return visitor.visit_unary_expr(self)
 
+    def __repr__(self):
+      return f'Unary({self.operator=}, {self.right=})'
+
   
   class Variable:
     def __init__(self, name: TokenItem):
@@ -72,3 +84,6 @@ class Expr(ABC):
 
     def accept(self, visitor: Expr.Visitor):
       return visitor.visit_variable_expr(self)
+
+    def __repr__(self):
+      return f'Variable({self.name})'

@@ -8,5 +8,5 @@ class TokenItem:
     self.line = line
 
 
-  def __str__(self):
-    return f'token={self.token_type}\nlexeme=\'{self.lexeme}\'\n{f"literal={self.literal}" if self.literal != None else ""}\n'
+  def __repr__(self):
+    return f'Token({self.token_type.name=}, {self.lexeme=}, {self.literal=})'

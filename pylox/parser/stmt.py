@@ -34,6 +34,9 @@ class Stmt(ABC):
     def accept(self, visitor: Stmt.Visitor):
       visitor.visit_expression_stmt(self)
 
+    def __repr__(self):
+      return f'Expression({self.expression=})'
+
 
   class Print:
     def __init__(self, expression: Expr):
@@ -43,6 +46,9 @@ class Stmt(ABC):
     def accept(self, visitor: Stmt.Visitor):
       visitor.visit_print_stmt(self)
 
+    def __repr__(self):
+      return f'Print({self.expression=})'
+
   class Var:
     def __init__(self, name: TokenItem, initializer: Expr):
       self.name = name
@@ -51,4 +57,7 @@ class Stmt(ABC):
     
     def accept(self, visitor: Stmt.Visitor):
       visitor.visit_var_stmt(self)
+
+    def __repr__(self):
+      return f'Var({self.name=}, {self.initializer=})'
     
