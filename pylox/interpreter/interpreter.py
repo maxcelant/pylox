@@ -1,5 +1,6 @@
 
 from typing import Callable
+from pylox.interpreter.environment import Environment
 from pylox.parser.expr import Expr
 from pylox.parser.stmt import Stmt
 from pylox.scanner.token_type import TokenType
@@ -10,6 +11,7 @@ class Interpreter(Expr.Visitor, Stmt.Visitor):
 
   def __init__(self, error_callback: Callable[[RuntimeException], None]):
     self.error_callback = error_callback
+    self.environment = Environment()
 
 
   def interpret(self, statements: list[Stmt]):

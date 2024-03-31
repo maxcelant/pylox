@@ -79,16 +79,23 @@ class Parser:
     return Stmt.Print(value)
   
 
+  def var_declaration(self) -> Stmt:
+    name: TokenItem = self.consume(TokenType.IDENTIFIER, "Expect variable name.")
+
+    initializer: Expr = None
+    if self.match(TokenType.EQUAL):
+      initializer = self.expression()
+    
+    self.consume(TokenType.SEMICOLON, "Expect ';' after variable declaration.")
+    return Stmt.Var(name, initializer)
+
+
   def expression_statement(self) -> Stmt:
     expr: Expr = self.expression()
     self.consume(TokenType.SEMICOLON, "Expect ';' after value.")
     return Stmt.Expression
-  
 
-  def expression(self) -> Expr:
-    return self.equality()
   
-
   def declaration(self) -> Stmt:
     try:
       if self.match(TokenType.VAR):
@@ -97,6 +104,10 @@ class Parser:
     except Parser.ParseError:
       self.synchronize()
       return None
+
+
+  def expression(self) -> Expr:
+    return self.equality()
 
   
   def equality(self) -> Expr:
@@ -159,6 +170,9 @@ class Parser:
 
     if self.match(TokenType.NUMBER, TokenType.STRING):
       return Expr.Literal(self.previous().literal)
+    
+    if self.match(TokenType.IDENTIFIER):
+      return Expr.Variable(self.previous())
     
     if self.match(TokenType.LEFT_PAREN):
       expr: Expr = self.expression()
