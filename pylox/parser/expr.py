@@ -69,3 +69,6 @@ class Expr(ABC):
   class Variable:
     def __init__(self, name: TokenItem):
       self.name = name
+
+    def accept(self, visitor: Expr.Visitor):
+      return visitor.visit_variable_expr(self)

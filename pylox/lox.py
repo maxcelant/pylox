@@ -19,6 +19,10 @@ class Lox:
       print('Usage pylox [script]')
       return
     
+    if not sys.argv[1].endswith('.lox'):
+      print('Must be a lox file type')
+      return
+    
     Lox.interpreter = Interpreter(Lox.runtime_error)
     if len(sys.argv) == 2:
       Lox.run_file(sys.argv[1])
