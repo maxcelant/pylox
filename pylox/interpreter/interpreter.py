@@ -74,15 +74,22 @@ class Interpreter(Expr.Visitor, Stmt.Visitor):
     print(self.stringify(value))
 
 
-  def visit_literal(self, expr: Expr.Literal):
+  def visit_var_stmt(self, stmt: Stmt.Var) -> None:
+    value: object = None
+    if stmt.initializer:
+      value = self.evaluate(stmt.initializer)
+    self.environment.define(stmt.name.lexeme, value)
+
+
+  def visit_literal_expr(self, expr: Expr.Literal):
     return expr.value
 
 
-  def visit_grouping(self, expr: Expr.Grouping):
+  def visit_grouping_expr(self, expr: Expr.Grouping):
     return self.evaluate(expr.expression)
 
 
-  def visit_unary(self, expr: Expr.Unary):
+  def visit_unary_expr(self, expr: Expr.Unary):
     right: object = self.evaluate(expr.right)
 
     if expr.operator.token_type == TokenType.MINUS:
@@ -91,9 +98,12 @@ class Interpreter(Expr.Visitor, Stmt.Visitor):
     
     if expr.operator.token_type == TokenType.BANG:
       return not self.is_truthy(right)
+    
+  
+  def visit_variable_expr(self, expr: Expr.Variable):
+    return self.environment.get(expr.name)
 
-
-  def visit_binary(self, expr: Expr.Binary):
+  def visit_binary_expr(self, expr: Expr.Binary):
     right: object = self.evaluate(expr.right)
     left: object = self.evaluate(expr.left)
 

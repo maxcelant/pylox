@@ -12,21 +12,24 @@ class Expr(ABC):
 
   class Visitor(ABC):
     @abstractmethod
-    def visit_binary(self, binary: Expr.Binary):
+    def visit_binary_expr(self, binary: Expr.Binary):
       pass
 
     @abstractmethod
-    def visit_grouping(self, grouping: Expr.Grouping):
+    def visit_grouping_expr(self, grouping: Expr.Grouping):
       pass
 
     @abstractmethod
-    def visit_literal(self, literal: Expr.Literal):
+    def visit_literal_expr(self, literal: Expr.Literal):
       pass
 
     @abstractmethod
-    def visit_unary(self, unary: Expr.Unary):
+    def visit_unary_expr(self, unary: Expr.Unary):
       pass
 
+    @abstractmethod
+    def visit_variable_expr(self, variable: Expr.Variable):
+      pass
 
   class Binary:
     def __init__(self, left: Expr, operator: TokenItem, right: Expr):
@@ -35,7 +38,7 @@ class Expr(ABC):
       self.right = right
 
     def accept(self, visitor: Expr.Visitor):
-      return visitor.visit_binary(self)
+      return visitor.visit_binary_expr(self)
 
 
   class Grouping:
@@ -43,7 +46,7 @@ class Expr(ABC):
       self.expression = expression
 
     def accept(self, visitor: Expr.Visitor):
-      return visitor.visit_grouping(self)
+      return visitor.visit_grouping_expr(self)
 
 
   class Literal:
@@ -51,7 +54,7 @@ class Expr(ABC):
       self.value = value
 
     def accept(self, visitor: Expr.Visitor):
-      return visitor.visit_literal(self)
+      return visitor.visit_literal_expr(self)
 
 
   class Unary:
@@ -60,7 +63,7 @@ class Expr(ABC):
       self.right = right
 
     def accept(self, visitor: Expr.Visitor):
-      return visitor.visit_unary(self)
+      return visitor.visit_unary_expr(self)
 
   
   class Variable:
