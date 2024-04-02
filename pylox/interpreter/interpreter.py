@@ -104,6 +104,10 @@ class Interpreter(Expr.Visitor, Stmt.Visitor):
     return self.environment.get(expr.name)
   
 
+  def visit_assign_expr(self, assign: Expr.Assign):
+    pass # todo
+  
+
   def visit_binary_expr(self, expr: Expr.Binary):
     right: object = self.evaluate(expr.right)
     left: object = self.evaluate(expr.left)

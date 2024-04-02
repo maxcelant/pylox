@@ -111,7 +111,19 @@ class Parser:
   
 
   def assignment(self) -> Expr:
-    pass # todo
+    expr: Expr = self.equality()
+
+    if self.match(TokenType.EQUAL):
+      equals: TokenItem = self.previous()
+      value: Expr = self.assignment()
+
+      if isinstance(expr, Expr.Variable):
+        name: TokenType = expr.name
+        return Expr.Assign(name, value)
+      
+      self.error(equals, "Invalid assignment target.")
+    
+    return expr
 
   
   def equality(self) -> Expr:
