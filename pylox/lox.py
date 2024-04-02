@@ -13,6 +13,7 @@ class Lox:
   had_runtime_error = False
   interpreter = None
   
+
   @staticmethod
   def init() -> None:
     if len(sys.argv) > 2:
@@ -29,6 +30,7 @@ class Lox:
     else:
       Lox.run_prompt()
 
+
   @staticmethod
   def run_prompt() -> None:
     while True:
@@ -37,6 +39,7 @@ class Lox:
         break
       Lox.run(line)
       Lox.had_error = False
+
 
   @staticmethod
   def run_file(path: str) -> None:
@@ -50,6 +53,7 @@ class Lox:
     if Lox.had_runtime_error:
       sys.exit(70)
 
+
   @staticmethod
   def run(source: str) -> None:
     scanner = Scanner(source, Lox.scanner_error)
@@ -61,9 +65,11 @@ class Lox:
 
     Lox.interpreter.interpret(statements)
   
+
   @staticmethod
   def scanner_error(line: int, message: str) -> None:
     Lox.report(line, "", message)
+
 
   @staticmethod
   def parse_error(token: TokenItem, message: str) -> None:
@@ -72,12 +78,14 @@ class Lox:
     else:
       Lox.report(token.line, " at '" + token.lexeme + "'", message)
 
+
   @staticmethod
   def runtime_error(error: RuntimeException) -> None:
     print(f'Error: {error}\n[line {error.token.line}]') 
     Lox.had_runtime_error = True
 
+
   @staticmethod
   def report(line: int, where: str, message: str) -> None:
-    print(f'[line {line} ] Error{where}: {message}')
+    print(f'[line {line}] Error{where}: {message}')
 

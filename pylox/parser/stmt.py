@@ -33,7 +33,7 @@ class Stmt(ABC):
       visitor.visit_expression_stmt(self)
 
     def __repr__(self):
-      return f'Expression({self.expression=})'
+      return f'Stmt.Expression({self.expression=})'
 
 
   class Print:
@@ -44,7 +44,7 @@ class Stmt(ABC):
       visitor.visit_print_stmt(self)
 
     def __repr__(self):
-      return f'Print({self.expression=})'
+      return f'Stmt.Print({self.expression=})'
 
 
   class Var:
@@ -56,5 +56,5 @@ class Stmt(ABC):
       visitor.visit_var_stmt(self)
 
     def __repr__(self):
-      return f'Var({self.name=}, {self.initializer=})'
+      return f'Stmt.Var({self.name=}, {self.initializer=})'
     

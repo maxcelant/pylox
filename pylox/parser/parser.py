@@ -107,7 +107,11 @@ class Parser:
 
 
   def expression(self) -> Expr:
-    return self.equality()
+    return self.assignment()
+  
+
+  def assignment(self) -> Expr:
+    pass # todo
 
   
   def equality(self) -> Expr:

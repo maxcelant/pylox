@@ -17,7 +17,6 @@ class Interpreter(Expr.Visitor, Stmt.Visitor):
   def interpret(self, statements: list[Stmt]):
     try:
       for s in statements:
-        print(s)
         self.execute(s)
     except RuntimeException as e:
       self.error_callback(e)
