@@ -1,5 +1,7 @@
 # PyLox
 
+Check out the `/docs` for more info on each portion of the project (scanner, parser and interpreter, etc).
+
 ### How to Run
 
 ```bash
