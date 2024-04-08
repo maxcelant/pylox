@@ -1,3 +1,5 @@
 var a = 5;
-a = 6;
-print a;
+var b;
+a = b = 6;
+print "a" + a;
+print "a" + b;

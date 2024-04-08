@@ -25,6 +25,17 @@ class Stmt(ABC):
       pass
 
 
+  class Block:
+    def __init__(self, statements: list[Stmt]):
+      self.statements = statements
+
+    def accept(self, visitor: Stmt.Visitor):
+      visitor.visit_block_stmt(self)
+
+    def __repr__(self):
+      return "Stmt.Block(" + ',\n'.join([repr(s) for s in self.statements])
+
+
   class Expression:
     def __init__(self, expression: Expr):
       self.expression = expression
