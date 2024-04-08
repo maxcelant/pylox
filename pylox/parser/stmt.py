@@ -12,16 +12,21 @@ class Stmt(ABC):
 
 
   class Visitor(ABC):
+
     @abstractmethod
-    def visit_print_stmt(self, expr: Stmt.Expr):
+    def visit_block_stmt(self, stmt: Stmt.Block):
       pass
 
     @abstractmethod
-    def visit_expression_stmt(self, expr: Stmt.Expr):
+    def visit_print_stmt(self, stmt: Stmt.Print):
       pass
 
     @abstractmethod
-    def visit_var_stmt(self, expr: Stmt.Expr):
+    def visit_expression_stmt(self, stmt: Stmt.Expression):
+      pass
+
+    @abstractmethod
+    def visit_var_stmt(self, stmt: Stmt.Var):
       pass
 
 

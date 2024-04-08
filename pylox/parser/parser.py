@@ -48,6 +48,8 @@ class Parser:
   def statement(self) -> Stmt:
     if self.match(TokenType.PRINT):
       return self.print_statement()
+    if self.match(TokenType.LEFT_BRACE):
+      return Stmt.Block() # todo
     return self.expression_statement()
   
 
