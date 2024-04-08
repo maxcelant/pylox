@@ -22,51 +22,29 @@ class Parser:
     while not self.is_at_end():
       statements.append(self.declaration())
     return statements
-
-
-  def match(self, *types: TokenType) -> bool:
-    for t in types:
-      if self.check(t):
-        self.advance()
-        return True
-    return False
   
 
-  def consume(self, token_type: TokenType, message: str) -> TokenItem:
-    if self.check(token_type):
-      return self.advance()
-    raise self.error(self.peek(), message)
+  def declaration(self) -> Stmt:
+    try:
+      if self.match(TokenType.VAR):
+        return self.var_declaration()
+      return self.statement()
+    except Parser.ParseError:
+      self.synchronize()
+      return None
+    
+    
+  def var_declaration(self) -> Stmt:
+    name: TokenItem = self.consume(TokenType.IDENTIFIER, "Expect variable name.")
+
+    initializer: Expr = None
+    if self.match(TokenType.EQUAL):
+      initializer = self.expression()
+    
+    self.consume(TokenType.SEMICOLON, "Expect ';' after variable declaration.")
+    return Stmt.Var(name, initializer)
   
-
-  def check(self, token_type: TokenType) -> bool:
-    if self.is_at_end():
-      return False
-    return self.peek().token_type == token_type
-
-
-  def advance(self) -> TokenItem:
-    if not self.is_at_end():
-      self.current += 1
-    return self.previous()
-
-
-  def is_at_end(self) -> bool:
-    return self.peek().token_type == TokenType.EOF
-
-
-  def peek(self) -> TokenItem:
-    return self.tokens[self.current]
-
-
-  def previous(self) -> TokenItem:
-    return self.tokens[self.current - 1]
-
-
-  def error(self, token: TokenItem, message: str):
-    self.error_callback(token, message)
-    return Parser.ParseError()
   
-
   def statement(self) -> Stmt:
     if self.match(TokenType.PRINT):
       return self.print_statement()
@@ -77,34 +55,13 @@ class Parser:
     value: Expr = self.expression()
     self.consume(TokenType.SEMICOLON, "Expect ';' after value.")
     return Stmt.Print(value)
-  
-
-  def var_declaration(self) -> Stmt:
-    name: TokenItem = self.consume(TokenType.IDENTIFIER, "Expect variable name.")
-
-    initializer: Expr = None
-    if self.match(TokenType.EQUAL):
-      initializer = self.expression()
-    
-    self.consume(TokenType.SEMICOLON, "Expect ';' after variable declaration.")
-    return Stmt.Var(name, initializer)
 
 
   def expression_statement(self) -> Stmt:
     expr: Expr = self.expression()
     self.consume(TokenType.SEMICOLON, "Expect ';' after value.")
     return Stmt.Expression(expr)
-
   
-  def declaration(self) -> Stmt:
-    try:
-      if self.match(TokenType.VAR):
-        return self.var_declaration()
-      return self.statement()
-    except Parser.ParseError:
-      self.synchronize()
-      return None
-
 
   def expression(self) -> Expr:
     return self.assignment()
@@ -196,6 +153,49 @@ class Parser:
       return Expr.Grouping(expr)
     
     raise self.error_callback(self.peek(), "Expect expression.")
+
+
+  def match(self, *types: TokenType) -> bool:
+    for t in types:
+      if self.check(t):
+        self.advance()
+        return True
+    return False
+  
+
+  def consume(self, token_type: TokenType, message: str) -> TokenItem:
+    if self.check(token_type):
+      return self.advance()
+    raise self.error(self.peek(), message)
+  
+
+  def check(self, token_type: TokenType) -> bool:
+    if self.is_at_end():
+      return False
+    return self.peek().token_type == token_type
+
+
+  def advance(self) -> TokenItem:
+    if not self.is_at_end():
+      self.current += 1
+    return self.previous()
+
+
+  def is_at_end(self) -> bool:
+    return self.peek().token_type == TokenType.EOF
+
+
+  def peek(self) -> TokenItem:
+    return self.tokens[self.current]
+
+
+  def previous(self) -> TokenItem:
+    return self.tokens[self.current - 1]
+
+
+  def error(self, token: TokenItem, message: str):
+    self.error_callback(token, message)
+    return Parser.ParseError()
 
 
   def synchronize(self) -> None:
