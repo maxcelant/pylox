@@ -1,6 +1,4 @@
-var a = (5 + 15) / 4;
-var x = 21 * (12 + (9 / 3))
-print x;
+var a = 5;
 
 {
   var b = 10;
