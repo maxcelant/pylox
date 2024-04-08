@@ -43,6 +43,9 @@ class Expr(ABC):
 
     def accept(self, visitor: Expr.Visitor):
       return visitor.visit_assign_expr(self)
+    
+    def __repr__(self):
+      return f'Assign({self.name=}, {self.value=})'
 
 
   class Binary:
