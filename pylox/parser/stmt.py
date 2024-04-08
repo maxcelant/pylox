@@ -10,7 +10,6 @@ class Stmt(ABC):
   def accept(self, visitor: Stmt.Visitor):
     pass
 
-
   class Visitor(ABC):
 
     @abstractmethod

@@ -1,5 +1,14 @@
-var a = 5;
-var b;
-a = b = 6;
-print "a" + a;
-print "a" + b;
+var a = (5 + 15) / 4;
+
+{
+  var b = 10;
+  print b;
+  print a;
+
+  {
+    var c = "Hello";
+    print c;
+  }
+}
+
+print a;

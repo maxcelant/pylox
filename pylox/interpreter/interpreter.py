@@ -41,6 +41,16 @@ class Interpreter(Expr.Visitor, Stmt.Visitor):
   def execute(self, stmt: Stmt):
     stmt.accept(self)
 
+  
+  def execute_block(self, statements: list[Stmt], environment: Environment):
+    previous = self.environment
+    try:
+      self.environment = environment
+      for stmt in statements:
+        self.execute(stmt)
+    finally:
+      self.environment = previous
+
 
   def is_truthy(self, obj: object) -> bool:
     if obj == None: return False
@@ -79,6 +89,10 @@ class Interpreter(Expr.Visitor, Stmt.Visitor):
     if stmt.initializer:
       value = self.evaluate(stmt.initializer)
     self.environment.define(stmt.name.lexeme, value)
+
+
+  def visit_block_stmt(self, stmt: Stmt.Block):
+    self.execute_block(stmt.statements, Environment(enclosing=self.environment))
 
 
   def visit_literal_expr(self, expr: Expr.Literal):
