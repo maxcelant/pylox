@@ -28,6 +28,21 @@ class Stmt(ABC):
     def visit_var_stmt(self, stmt: Stmt.Var):
       pass
 
+    @abstractmethod
+    def visit_if_stmt(self, stmt: Stmt.If):
+      pass
+
+  class If:
+    def __init__(self, condition: Expr, then_branch: Stmt, else_branch: Stmt):
+      self.condition = condition
+      self.then_branch = then_branch
+      self.else_branch = else_branch
+
+    def accept(self, visitor: Stmt.Visitor):
+      visitor.visit_if_stmt(self)
+
+    def __repr__(self):
+      return f'Stmt.If({self.condition=}, {self.then_branch=}, {self.else_branch=})'
 
   class Block:
     def __init__(self, statements: list[Stmt]):
