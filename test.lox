@@ -1,5 +1,8 @@
-if (true or true) {
-  print "hello";
+var foo = true;
+
+if (foo or "you wont see this") {
+  var bar = "Hello World";
+  print bar;
 } else {
-  print "you wont see this";
+  print "Hi";
 }

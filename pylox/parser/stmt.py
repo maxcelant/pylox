@@ -42,7 +42,7 @@ class Stmt(ABC):
       visitor.visit_if_stmt(self)
 
     def __repr__(self):
-      return f'Stmt.If(\n  {self.condition=}\n  {self.then_branch=}\n  {self.else_branch=})'
+      return f'Stmt.If(\n  {self.condition=}\n  {self.then_branch=}\n  {self.else_branch=}\n)'
 
   class Block:
     def __init__(self, statements: list[Stmt]):
