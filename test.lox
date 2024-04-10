@@ -1,14 +1,5 @@
-var a = 5;
-
-{
-  var b = 10;
-  print b;
-  print a;
-
-  {
-    var c = "Hello";
-    print c;
-  }
+if (true or true) {
+  print "hello";
+} else {
+  print "you wont see this";
 }
-
-print a;

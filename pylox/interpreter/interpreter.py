@@ -79,6 +79,13 @@ class Interpreter(Expr.Visitor, Stmt.Visitor):
     self.evaluate(stmt.expression)
 
 
+  def visit_if_stmt(self, stmt: Stmt.If) -> None:
+    if self.is_truthy(self.evaluate(stmt.condition)):
+      self.execute(stmt.then_branch)
+    elif stmt.else_branch:
+      self.execute(stmt.else_branch)
+
+
   def visit_print_stmt(self, stmt: Stmt.Print) -> None:
     value: object = self.evaluate(stmt.expression)
     print(self.stringify(value))
@@ -97,6 +104,19 @@ class Interpreter(Expr.Visitor, Stmt.Visitor):
 
   def visit_literal_expr(self, expr: Expr.Literal):
     return expr.value
+  
+
+  def visit_logical_expr(self, expr: Expr.Logical):
+    left: object = self.evaluate(expr.left)
+
+    if expr.operator.token_type == TokenType.OR:
+      if self.is_truthy(left): 
+        return left
+    else:
+      if not self.is_truthy(left): 
+        return left
+      
+    return self.evaluate(expr.right)
 
 
   def visit_grouping_expr(self, expr: Expr.Grouping):

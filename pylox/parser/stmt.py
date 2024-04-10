@@ -33,7 +33,7 @@ class Stmt(ABC):
       pass
 
   class If:
-    def __init__(self, condition: Expr, then_branch: Stmt, else_branch: Stmt):
+    def __init__(self, condition: Expr, then_branch: Stmt, else_branch: Stmt | None):
       self.condition = condition
       self.then_branch = then_branch
       self.else_branch = else_branch
@@ -42,7 +42,7 @@ class Stmt(ABC):
       visitor.visit_if_stmt(self)
 
     def __repr__(self):
-      return f'Stmt.If({self.condition=}, {self.then_branch=}, {self.else_branch=})'
+      return f'Stmt.If(\n  {self.condition=}\n  {self.then_branch=}\n  {self.else_branch=})'
 
   class Block:
     def __init__(self, statements: list[Stmt]):

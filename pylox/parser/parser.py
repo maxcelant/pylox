@@ -46,12 +46,25 @@ class Parser:
   
   
   def statement(self) -> Stmt:
+    if self.match(TokenType.IF):
+      return self.if_statement()
     if self.match(TokenType.PRINT):
       return self.print_statement()
     if self.match(TokenType.LEFT_BRACE):
       return Stmt.Block(self.block())
     return self.expression_statement()
   
+
+  def if_statement(self) -> Stmt:
+    self.consume(TokenType.LEFT_PAREN, "Expect '(' after 'if'.")
+    condition: Expr = self.expression()
+    self.consume(TokenType.RIGHT_PAREN, "Expect ')' after if condition.")
+
+    then_branch: Stmt = self.statement()
+    else_branch: Stmt | None = self.statement() if self.match(TokenType.ELSE) else None
+    
+    return Stmt.If(condition, then_branch, else_branch) 
+
 
   def print_statement(self) -> Stmt:
     value: Expr = self.expression()
@@ -80,7 +93,7 @@ class Parser:
   
 
   def assignment(self) -> Expr:
-    expr: Expr = self.equality()
+    expr: Expr = self.logic_or()
 
     if self.match(TokenType.EQUAL):
       equals: TokenItem = self.previous()
@@ -93,7 +106,28 @@ class Parser:
       self.error(equals, "Invalid assignment target.")
     
     return expr
+  
 
+  def logic_or(self) -> Expr:
+    expr: Expr = self.logic_and()
+
+    while self.match(TokenType.OR):
+      operator: TokenType = self.previous()
+      right: Expr = self.logic_and()
+      expr = Expr.Logical(expr, operator, right)
+
+    return expr
+  
+
+  def logic_and(self) -> Expr:
+    expr: Expr = self.equality()
+
+    while self.match(TokenType.AND):
+      operator: TokenType = self.previous()
+      right: Expr = self.equality()
+      expr = Expr.Logical(expr, operator, right)
+
+    return expr
   
   def equality(self) -> Expr:
     expr: Expr = self.comparison()

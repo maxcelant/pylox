@@ -11,6 +11,10 @@ class Expr(ABC):
     pass
 
   class Visitor(ABC):
+
+    @abstractmethod
+    def visit_assign_expr(self, assign: Expr.Assign):
+      pass
     
     @abstractmethod
     def visit_binary_expr(self, binary: Expr.Binary):
@@ -25,7 +29,7 @@ class Expr(ABC):
       pass
 
     @abstractmethod
-    def visit_unary_expr(self, unary: Expr.Unary):
+    def visit_logical_expr(self, expr: Expr.Logical):
       pass
 
     @abstractmethod
@@ -33,8 +37,9 @@ class Expr(ABC):
       pass
 
     @abstractmethod
-    def visit_assign_expr(self, assign: Expr.Assign):
+    def visit_unary_expr(self, unary: Expr.Unary):
       pass
+
 
   class Assign:
     def __init__(self, name: TokenItem, value: Expr):
@@ -81,18 +86,19 @@ class Expr(ABC):
 
     def __repr__(self):
       return f'Literal({self.value=})'
-
-
-  class Unary:
-    def __init__(self, operator: TokenItem, right: Expr):
+    
+  
+  class Logical:
+    def __init__(self, left: Expr, operator: TokenItem, right: Expr):
+      self.left = left
       self.operator = operator
       self.right = right
 
     def accept(self, visitor: Expr.Visitor):
-      return visitor.visit_unary_expr(self)
+      return visitor.visit_logical_expr(self)
 
     def __repr__(self):
-      return f'Unary({self.operator=}, {self.right=})'
+      return f'Logical({self.left=}, {self.operator=}, {self.right=})'
 
   
   class Variable:
@@ -103,4 +109,16 @@ class Expr(ABC):
       return visitor.visit_variable_expr(self)
 
     def __repr__(self):
-      return f'Variable({self.name})'
+      return f'Variable({self.name=})'
+    
+    
+  class Unary:
+    def __init__(self, operator: TokenItem, right: Expr):
+      self.operator = operator
+      self.right = right
+
+    def accept(self, visitor: Expr.Visitor):
+      return visitor.visit_unary_expr(self)
+
+    def __repr__(self):
+      return f'Unary({self.operator=}, {self.right=})'
