@@ -33,7 +33,18 @@ class Parser:
       self.synchronize()
       return None
     
-    
+  
+  def statement(self) -> Stmt:
+    if self.match(TokenType.IF):
+      return self.if_statement()
+    if self.match(TokenType.PRINT):
+      return self.print_statement()
+    if self.match(TokenType.WHILE):
+      return self.while_statement()
+    if self.match(TokenType.LEFT_BRACE):
+      return Stmt.Block(self.block())
+    return self.expression_statement()
+  
   def var_declaration(self) -> Stmt:
     name: TokenItem = self.consume(TokenType.IDENTIFIER, "Expect variable name.")
 
@@ -44,16 +55,15 @@ class Parser:
     self.consume(TokenType.SEMICOLON, "Expect ';' after variable declaration.")
     return Stmt.Var(name, initializer)
   
-  
-  def statement(self) -> Stmt:
-    if self.match(TokenType.IF):
-      return self.if_statement()
-    if self.match(TokenType.PRINT):
-      return self.print_statement()
-    if self.match(TokenType.LEFT_BRACE):
-      return Stmt.Block(self.block())
-    return self.expression_statement()
-  
+
+  def while_stmt(self) -> Stmt:
+    self.consume(TokenType.LEFT_PAREN, "Expect '(' after 'while'.")
+    condition: Expr = self.expression()
+    self.consume(TokenType.RIGHT_PAREN, "Expect ')' after condition.")
+    body: Stmt = self.statement()
+
+    return Stmt.While(condition, body)
+
 
   def if_statement(self) -> Stmt:
     self.consume(TokenType.LEFT_PAREN, "Expect '(' after 'if'.")

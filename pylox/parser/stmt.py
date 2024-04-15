@@ -32,6 +32,18 @@ class Stmt(ABC):
     def visit_if_stmt(self, stmt: Stmt.If):
       pass
 
+    @abstractmethod
+    def visit_while_stmt(self, stmt: Stmt.While):
+      pass
+
+  class While:
+    def __init__(self, condition: Expr, body: Stmt):
+      self.condition = condition
+      self.body = body
+
+    def accept(self, visitor: Stmt.Visitor):
+      visitor.visit_while_stmt(self)
+
   class If:
     def __init__(self, condition: Expr, then_branch: Stmt, else_branch: Stmt | None):
       self.condition = condition
