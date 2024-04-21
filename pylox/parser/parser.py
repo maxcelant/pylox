@@ -228,7 +228,31 @@ class Parser:
       right: Expr = self.unary()
       return Expr.Unary(operator, right)
 
-    return self.primary()
+    return self.call()
+  
+
+  def finish_call(self, callee: Expr) -> Expr:
+    arguments: list[Expr] = []
+
+    if not self.check(TokenType.RIGHT_PAREN):
+      arguments.append(self.expression())
+      while self.match(TokenType.COMMA):
+        arguments.append(self.expression())
+    
+    paren: TokenItem = self.consume(TokenType.RIGHT_PAREN, "Expect ')' after arguments.")
+    return Expr.Call(callee, paren, arguments)
+        
+
+  def call(self) -> Expr:
+    expr: Expr = self.primary()
+
+    while True:
+      if self.match(TokenType.LEFT_PAREN):
+        expr = self.finish_call(expr)
+      else:
+        break
+    
+    return expr
 
 
   def primary(self) -> Expr:

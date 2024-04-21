@@ -13,19 +13,23 @@ class Expr(ABC):
   class Visitor(ABC):
 
     @abstractmethod
-    def visit_assign_expr(self, assign: Expr.Assign):
+    def visit_assign_expr(self, expr: Expr.Assign):
       pass
     
     @abstractmethod
-    def visit_binary_expr(self, binary: Expr.Binary):
+    def visit_binary_expr(self, expr: Expr.Binary):
       pass
 
     @abstractmethod
-    def visit_grouping_expr(self, grouping: Expr.Grouping):
+    def visit_call_expr(self, expr: Expr.Call):
       pass
 
     @abstractmethod
-    def visit_literal_expr(self, literal: Expr.Literal):
+    def visit_grouping_expr(self, expr: Expr.Grouping):
+      pass
+
+    @abstractmethod
+    def visit_literal_expr(self, expr: Expr.Literal):
       pass
 
     @abstractmethod
@@ -33,11 +37,11 @@ class Expr(ABC):
       pass
 
     @abstractmethod
-    def visit_variable_expr(self, variable: Expr.Variable):
+    def visit_variable_expr(self, expr: Expr.Variable):
       pass
 
     @abstractmethod
-    def visit_unary_expr(self, unary: Expr.Unary):
+    def visit_unary_expr(self, expr: Expr.Unary):
       pass
 
 
@@ -64,6 +68,16 @@ class Expr(ABC):
     
     def __repr__(self):
       return f'Binary({self.left=}, {self.operator=}, {self.right})'
+    
+  
+  class Call:
+    def __init__(self, callee: Expr, paren: TokenItem, arguments: list[Expr]):
+      self.callee = callee
+      self.paren = paren
+      self.arguments = arguments
+
+    def accept(self, visitor: Expr.Visitor):
+      return visitor.visit_call_expr(self)
 
 
   class Grouping:
