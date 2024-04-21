@@ -97,6 +97,11 @@ class Interpreter(Expr.Visitor, Stmt.Visitor):
       value = self.evaluate(stmt.initializer)
     self.environment.define(stmt.name.lexeme, value)
 
+  
+  def visit_while_stmt(self, stmt: Stmt.While) -> None:
+    while self.is_truthy(self.evaluate(stmt.condition)):
+      self.execute(stmt.body)
+
 
   def visit_block_stmt(self, stmt: Stmt.Block):
     self.execute_block(stmt.statements, Environment(enclosing=self.environment))
