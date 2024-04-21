@@ -194,3 +194,13 @@ class Interpreter(Expr.Visitor, Stmt.Visitor):
       self.check_number_operands(expr.operator, left, right)
       return float(left) * float(right)
     
+  def visit_call_expr(self, expr: Expr.Call):
+    callee: object = self.evaluate(expr.callee)
+
+    arguments: list[object] = []
+    for arg in expr.arguments:
+      arguments.append(self.evaluate(arg))
+
+    
+    
+    return callee(*arguments)
