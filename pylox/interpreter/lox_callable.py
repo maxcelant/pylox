@@ -5,7 +5,10 @@ from pylox.interpreter.interpreter import Interpreter
 
 
 class LoxCallable(ABC):
-  
   @abstractmethod
-  def call(interpreter: Interpreter, arguments: list[object]):
+  def arity(self) -> int:
+    pass
+
+  @abstractmethod
+  def call(self, interpreter: Interpreter, arguments: list[object]) -> object:
     pass

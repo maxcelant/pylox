@@ -1,9 +1,12 @@
 
 from typing import Callable
+from pylox.interpreter.clock_function import ClockFunction
 from pylox.interpreter.environment import Environment
+from pylox.interpreter.lox_callable import LoxCallable
 from pylox.parser.expr import Expr
 from pylox.parser.stmt import Stmt
 from pylox.scanner.token_type import TokenType
+from pylox.scanner.token_item import TokenItem
 from pylox.interpreter.runtime_exception import RuntimeException
 
 
@@ -11,7 +14,10 @@ class Interpreter(Expr.Visitor, Stmt.Visitor):
 
   def __init__(self, error_callback: Callable[[RuntimeException], None]):
     self.error_callback = error_callback
-    self.environment = Environment()
+    self._globals = Environment()
+    self.environment = self._globals
+
+    self._globals.define("clock", ClockFunction())
 
 
   def interpret(self, statements: list[Stmt]):
@@ -64,12 +70,12 @@ class Interpreter(Expr.Visitor, Stmt.Visitor):
     return a == b
 
 
-  def check_number_operand(self, operator: TokenType, operand: object):
+  def check_number_operand(self, operator: TokenItem, operand: object):
     if isinstance(operand, float): return
     raise RuntimeException(operator, "Operand must be a number.")
 
 
-  def check_number_operands(self, operator: TokenType, left: object, right: object):
+  def check_number_operands(self, operator: TokenItem, left: object, right: object):
     if isinstance(left, float) and isinstance(right, float): 
       return
     raise RuntimeException(operator, "Operand must be a number.")
@@ -195,12 +201,15 @@ class Interpreter(Expr.Visitor, Stmt.Visitor):
       return float(left) * float(right)
     
   def visit_call_expr(self, expr: Expr.Call):
-    callee: object = self.evaluate(expr.callee)
+    function = self.evaluate(expr.callee)
 
     arguments: list[object] = []
     for arg in expr.arguments:
       arguments.append(self.evaluate(arg))
 
+    if not isinstance(function, LoxCallable):
+      return self.error_callback('Can only call functions and classes.')
+    if len(arguments) != function.arity():
+      return self.error_callback(f'Expected {function.arity()} arguments but got {len(arguments)}.')
     
-    
-    return callee(*arguments)
+    return function.call(self, arguments)
