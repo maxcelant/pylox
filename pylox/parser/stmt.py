@@ -36,17 +36,21 @@ class Stmt(ABC):
     def visit_while_stmt(self, stmt: Stmt.While):
       pass
 
+    @abstractmethod
+    def visit_function_stmt(self, stmt: Stmt.Function):
+      pass
+
   class While:
     def __init__(self, condition: Expr, body: Stmt):
       self.condition = condition
-      self.body = body
+      self.body      = body
 
     def accept(self, visitor: Stmt.Visitor):
       visitor.visit_while_stmt(self)
 
   class If:
     def __init__(self, condition: Expr, then_branch: Stmt, else_branch: Stmt | None):
-      self.condition = condition
+      self.condition   = condition
       self.then_branch = then_branch
       self.else_branch = else_branch
 
@@ -55,6 +59,19 @@ class Stmt(ABC):
 
     def __repr__(self):
       return f'Stmt.If(\n  {self.condition=}\n  {self.then_branch=}\n  {self.else_branch=}\n)'
+
+  class Function:
+    def __init__(self, name: TokenItem, params: list[TokenItem], body: list[Stmt]):
+      self.name   = name
+      self.params = params
+      self.body   = body
+
+    def accept(self, visitor: Stmt.Visitor):
+        visitor.visit_function_stmt(self)
+
+    def __repr__(self):
+        return f'Stmt.Function(\n  {self.name=}\n  {self.params=}\n  {self.body})'
+
 
   class Block:
     def __init__(self, statements: list[Stmt]):

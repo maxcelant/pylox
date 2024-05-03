@@ -26,6 +26,8 @@ class Parser:
 
   def declaration(self) -> Stmt | None:
     try:
+      if self.match(TokenType.FUN):   
+        return self.function("function")
       if self.match(TokenType.VAR):
         return self.var_declaration()
       return self.statement()
@@ -136,6 +138,22 @@ class Parser:
     self.consume(TokenType.SEMICOLON, "Expect ';' after value.")
     return Stmt.Expression(expr)
   
+
+  def function(self, kind: str) -> Stmt.Function:
+    name: TokenItem = self.consume(TokenType.IDENTIFIER, f"Expect {kind} name.")
+    self.consume(TokenType.LEFT_PAREN, f"Expect '(' after {kind} name." )
+
+    parameters: list[TokenItem] = []
+    if not self.check(TokenType.RIGHT_PAREN):
+      while True:
+        parameters.append(self.consume(TokenType.IDENTIFIER, "Expect parameter name."))
+        if not self.match(TokenType.COMMA): break
+
+    self.consume(TokenType.RIGHT_PAREN, "Expect ')' after parameters")
+    self.consume(TokenType.LEFT_BRACE, "Expect '{' before " + kind + " body.")
+    body: list[Stmt] = self.block()
+    return Stmt.Function(name, parameters, body)
+
 
   def expression(self) -> Expr:
     return self.assignment()

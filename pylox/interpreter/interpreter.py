@@ -14,10 +14,10 @@ class Interpreter(Expr.Visitor, Stmt.Visitor):
 
   def __init__(self, error_callback: Callable[[RuntimeException], None]):
     self.error_callback = error_callback
-    self._globals = Environment()
-    self.environment = self._globals
+    self.Globals = Environment()
+    self.environment = self.Globals
 
-    self._globals.define("clock", ClockFunction())
+    self.Globals.define("clock", ClockFunction())
 
 
   def interpret(self, statements: list[Stmt]):
@@ -213,3 +213,6 @@ class Interpreter(Expr.Visitor, Stmt.Visitor):
       return self.error_callback(f'Expected {function.arity()} arguments but got {len(arguments)}.')
     
     return function.call(self, arguments)
+
+
+
