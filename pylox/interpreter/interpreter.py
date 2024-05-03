@@ -1,8 +1,6 @@
 
 from typing import Callable
-from pylox.interpreter.clock_function import ClockFunction
 from pylox.interpreter.environment import Environment
-from pylox.interpreter.lox_callable import LoxCallable
 from pylox.parser.expr import Expr
 from pylox.parser.stmt import Stmt
 from pylox.scanner.token_type import TokenType
@@ -13,10 +11,10 @@ from pylox.interpreter.runtime_exception import RuntimeException
 class Interpreter(Expr.Visitor, Stmt.Visitor):
 
   def __init__(self, error_callback: Callable[[RuntimeException], None]):
+    from pylox.interpreter.clock_function import ClockFunction
     self.error_callback = error_callback
     self.Globals = Environment()
     self.environment = self.Globals
-
     self.Globals.define("clock", ClockFunction())
 
 
@@ -83,6 +81,12 @@ class Interpreter(Expr.Visitor, Stmt.Visitor):
 
   def visit_expression_stmt(self, stmt: Stmt.Expression) -> None:
     self.evaluate(stmt.expression)
+
+
+  def visit_function_stmt(self, stmt: Stmt.Function) -> None:
+    from pylox.interpreter.lox_function import LoxFunction
+    function: LoxFunction = LoxFunction(stmt)
+    self.environment.define(stmt.name.lexeme, function)
 
 
   def visit_if_stmt(self, stmt: Stmt.If) -> None:
@@ -200,7 +204,9 @@ class Interpreter(Expr.Visitor, Stmt.Visitor):
       self.check_number_operands(expr.operator, left, right)
       return float(left) * float(right)
     
+
   def visit_call_expr(self, expr: Expr.Call):
+    from pylox.interpreter.lox_callable import LoxCallable
     function = self.evaluate(expr.callee)
 
     arguments: list[object] = []

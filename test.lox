@@ -1,15 +1,9 @@
-var person = "David";
-var person1 = "Emily";
 
-print person + " ♥ " + person1;
 
-{
-  var person2 = "Max";
-  print person2;
+
+fun helloWorld() {
+  print "hello world!";
 }
 
-for (var i = 0; i < 10; i = i + 1) {
-  print i;
-}
-
+helloWorld();
 

@@ -4,7 +4,6 @@ from pylox.interpreter.lox_callable import LoxCallable
 from pylox.interpreter.environment import Environment
 from pylox.interpreter.interpreter import Interpreter
 
-
 class LoxFunction(LoxCallable):
   def __init__(self, declaration: Stmt.Function):
     self.declaration = declaration   
@@ -14,3 +13,9 @@ class LoxFunction(LoxCallable):
     for i in range(len(self.declaration.params)):
       environment.define(self.declaration.params[i].lexeme, arguments[i])
     interpreter.execute_block(self.declaration.body, environment)
+
+  def arity(self):
+    return len(self.declaration.params)
+
+  def __repr__(self):
+    return f'<fn {self.declaration.name.lexeme}>'

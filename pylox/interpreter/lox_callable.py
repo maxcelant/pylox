@@ -12,3 +12,4 @@ class LoxCallable(ABC):
   @abstractmethod
   def call(self, interpreter: Interpreter, arguments: list[object]) -> object:
     pass
+
