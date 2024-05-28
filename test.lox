@@ -1,9 +1,9 @@
 
 
 
-fun helloWorld() {
-  print "hello world!";
+fun helloWorld(phrase) {
+  print phrase;
 }
 
-helloWorld();
+helloWorld("hello");
 

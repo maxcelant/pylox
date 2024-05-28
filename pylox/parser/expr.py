@@ -78,6 +78,9 @@ class Expr(ABC):
 
     def accept(self, visitor: Expr.Visitor):
       return visitor.visit_call_expr(self)
+    
+    def __repr__(self):
+      return f'Call(\n  {self.callee=}\n  {self.paren=}\n  {self.arguments=}\n)'
 
 
   class Grouping:
