@@ -11,21 +11,8 @@ class Stmt(ABC):
     pass
 
   class Visitor(ABC):
-
     @abstractmethod
-    def visit_block_stmt(self, stmt: Stmt.Block):
-      pass
-
-    @abstractmethod
-    def visit_print_stmt(self, stmt: Stmt.Print):
-      pass
-
-    @abstractmethod
-    def visit_expression_stmt(self, stmt: Stmt.Expression):
-      pass
-
-    @abstractmethod
-    def visit_var_stmt(self, stmt: Stmt.Var):
+    def visit_while_stmt(self, stmt: Stmt.While):
       pass
 
     @abstractmethod
@@ -33,12 +20,25 @@ class Stmt(ABC):
       pass
 
     @abstractmethod
-    def visit_while_stmt(self, stmt: Stmt.While):
+    def visit_function_stmt(self, stmt: Stmt.Function):
       pass
 
     @abstractmethod
-    def visit_function_stmt(self, stmt: Stmt.Function):
+    def visit_block_stmt(self, stmt: Stmt.Block):
       pass
+
+    @abstractmethod
+    def visit_expression_stmt(self, stmt: Stmt.Expression):
+      pass
+
+    @abstractmethod
+    def visit_print_stmt(self, stmt: Stmt.Print):
+      pass
+
+    @abstractmethod
+    def visit_var_stmt(self, stmt: Stmt.Var):
+      pass
+
 
   class While:
     def __init__(self, condition: Expr, body: Stmt):
