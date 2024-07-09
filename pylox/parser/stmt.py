@@ -48,6 +48,9 @@ class Stmt(ABC):
     def accept(self, visitor: Stmt.Visitor):
       visitor.visit_while_stmt(self)
 
+    def __repr__(self):
+      return f'Stmt.Function(\n  {self.condition=}\n  {self.body}\n)'
+
   class If:
     def __init__(self, condition: Expr, then_branch: Stmt, else_branch: Stmt | None):
       self.condition   = condition
